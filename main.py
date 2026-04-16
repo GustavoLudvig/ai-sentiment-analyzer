@@ -1,25 +1,30 @@
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
+from groq import Groq
 
-# 1. Carrega as variáveis do arquivo .env
+# Carrega as variáveis do arquivo .env
 load_dotenv()
 
-# 2. Inicializa o cliente da OpenAI usando a chave segura
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Inicializa o cliente da Groq usando a chave correta
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def analisar_sentimento(texto):
-    # 3. Criando a chamada para a IA (LLM)
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo", # Modelo leve e rápido
+    completion = client.chat.completions.create(
+        model="llama3-8b-8192",
         messages=[
-            {"role": "system", "content": "Você é um assistente especializado em análise de sentimentos de clientes de uma padaria. Responda apenas com uma palavra: POSITIVO, NEGATIVO ou NEUTRO."},
-            {"role": "user", "content": texto}
-        ]
+            {
+                "role": "system",
+                "content": "Você é um analista de sentimentos. Responda apenas com uma palavra: POSITIVO, NEGATIVO ou NEUTRO."
+            },
+            {
+                "role": "user",
+                "content": texto
+            }
+        ],
     )
-    return response.choices[0].message.content
+    return completion.choices[0].message.content
 
-# 4. Teste prático
+# Teste prático
 feedback = "O pão estava quentinho, mas o atendimento demorou muito hoje."
 resultado = analisar_sentimento(feedback)
 
