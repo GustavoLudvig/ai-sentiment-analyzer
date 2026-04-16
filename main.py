@@ -10,7 +10,7 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def analisar_sentimento(texto):
     completion = client.chat.completions.create(
-        model="llama3-8b-8192",
+        model="llama3-70b-versatile",
         messages=[
             {
                 "role": "system",
